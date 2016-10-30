@@ -8,5 +8,6 @@
           "mongodb://localhost:27017/test", 
           "mongodb://localhost:27017/test"]
     }
-  }
+  },
+  "GeoHashLevel": 2
 }

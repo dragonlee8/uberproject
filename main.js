@@ -22,7 +22,6 @@
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
-var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var assert = require('assert');
 var amqp = require('amqp');
@@ -45,7 +44,7 @@ var hammock = require('hammock');
 'use strict';
 
 var id = 0;
-const GEOLEVEL = 2;
+const GEOLEVEL = config.get('GeoHashLevel');
 
 function main(args) {
     program
@@ -183,8 +182,6 @@ function bootstrapCallback(ringpop, i) {
 // your own application logic.
 function forwardedCallback() {
     return function onRequest(req, res) {
-        console.log("got request");
-
         if (req.url == 'tripUpdate')
         {
             updateTripInfo(JSON.parse(req._readableState.buffer.tail.data.toString()));
@@ -280,7 +277,6 @@ function createHttpServers(ringpop, port) {
 
             key = destins[destination];
             if (ringpop.handleOrProxy(key, req, resp)) {
-                console.log('Ringpop ' + ringpop.whoami() + ' handled Count ' + key);
                 findTrips(req.params, function(tripSet){
                     for (let tripid of tripSet)
                     {
@@ -378,12 +374,9 @@ function createMQListener(ringpop, port) {
                 var resp = allocResponse({}, callback);
 
                 if (ringpop.handleOrProxy(shardKey, req, resp)) {
-                    console.log('Ringpop ' + ringpop.whoami() + ' handled ' + shardKey);
                     updateTripInfo(tripUpdate);
                 } else {
                     var destination = ringpop.lookup(shardKey);
-                    console.log('Ringpop ' + ringpop.whoami() +
-                      ' forwarded ' + shardKey + " " + destination);
                 }
 
             });

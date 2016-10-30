@@ -1,14 +1,14 @@
-// import the necessary modules
-var mongoose = require('mongoose');
+    // import the necessary modules
+    var mongoose = require('mongoose');
 
-// create an export function to encapsulate the model creation
-module.exports = function() {
-    // define schema
+    // create an export function to encapsulate the model creation
+    module.exports = function() {
+        // define schema
 
-    var TripLocSchema = mongoose.Schema({
-        event: String,
-        tripid: Number,
-        timestamp: Number,
+        var TripLocSchema = mongoose.Schema({
+            event: String,
+            tripid: Number,
+            timestamp: Number,
         loc: {
             type: {
                 type: 'String',
