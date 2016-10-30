@@ -30,6 +30,8 @@ var geohash = require('ngeohash');
 var _ = require('underscore');
 var http = require('http');
 var tryIt = require('tryit');
+var config = require('config');
+
 require('./tripLoc.js')();
 var TripLocModel = mongoose.model('TripLoc');
 
@@ -42,9 +44,8 @@ var hammock = require('hammock');
 
 'use strict';
 
-const MONGOURL = 'mongodb://localhost:27017/test';
 var id = 0;
-const GEOLEVEL = 3;
+const GEOLEVEL = 2;
 
 function main(args) {
     program
@@ -147,9 +148,10 @@ function main(args) {
     }
 }
 
-function connectMongo()
+function connectMongo(i)
 {
-    mongoose.connect(MONGOURL);
+    var dbConfig = config.get('Cluster.dbConfig');
+    mongoose.connect(dbConfig.hosts[i]);
     db = mongoose.connection;
 
 }
@@ -166,16 +168,7 @@ function bootstrapCallback(ringpop, i) {
 
         console.log('Ringpop ' + ringpop.whoami() + ' has bootstrapped!');
 
-        //MongoClient.connect(MONGOURL, function(err, database) {
-        //    assert.equal(null, err);
-        //    console.log("Connected successfully to server");
-        //    db = database;
-        //    // After MongoDB connection established
-        //    createHttpServers(ringpop, i);
-        //    createMQListener(ringpop, i);
-        //});
-
-        connectMongo();
+        connectMongo(i-3000);
         db.on('error', console.error.bind(console, 'connection error:'));
         db.once('open', function() {
             console.log("Connected successfully to server");
@@ -190,6 +183,8 @@ function bootstrapCallback(ringpop, i) {
 // your own application logic.
 function forwardedCallback() {
     return function onRequest(req, res) {
+        console.log("got request");
+
         if (req.url == 'tripUpdate')
         {
             updateTripInfo(JSON.parse(req._readableState.buffer.tail.data.toString()));
@@ -248,7 +243,7 @@ function createHttpServers(ringpop, port) {
         // Find unique sharding keys
         // Most of time, the search should fall into one geo block, which returns one key
         getHashes.forEach(function(geoHash){
-            var shardKey = geoHash.substr(0,2);
+            var shardKey = geoHash;
             var destination = ringpop.lookup(shardKey);
             destins[destination] = shardKey;
         });
@@ -372,7 +367,7 @@ function createMQListener(ringpop, port) {
                 var geoHashKey = geohash.encode(latitude, longitude, precision=GEOLEVEL)
                 // I use the first two keys of the geohash as sharding key,
                 // in theory we can have at max 36*36 machines distribute the work
-                var shardKey = geoHashKey.substr(0,2);
+                var shardKey = geoHashKey;
 
                 var req = allocRequest({url: 'tripUpdate', json: tripUpdate});
 
