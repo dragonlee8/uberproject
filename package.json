@@ -1,0 +1,35 @@
+{
+  "name": "uberproject",
+  "version": "1.0.0",
+  "description": "ringpop cluster to update and get tripInfo",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mobilepricedev/uberproject.git"
+  },
+  "keywords": [
+    "uber",
+    "ringpop"
+  ],
+  "author": "Huan Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mobilepricedev/uberproject/issues"
+  },
+  "private": true,
+  "homepage": "https://github.com/mobilepricedev/uberproject#readme",
+  "dependencies": {
+    "amqp": "^0.2.6",
+    "cli-color": "^1.1.0",
+    "commander": "^2.9.0",
+    "express": "^4.14.0",
+    "farmhash": "^1.2.1",
+    "mongodb": "^2.2.11",
+    "mongoose": "^4.6.5",
+    "ngeohash": "^0.6.0",
+    "ringpop": "^10.16.2",
+    "tchannel": "^3.9.0",
+    "tryit": "^1.0.3",
+    "underscore": "^1.8.3"
+  }
+}
