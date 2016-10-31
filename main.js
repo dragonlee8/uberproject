@@ -23,6 +23,8 @@ var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 var assert = require('assert');
 var amqp = require('amqp');
 var geohash = require('ngeohash');
@@ -33,6 +35,7 @@ var config = require('config');
 
 require('./tripLoc.js')();
 var TripLocModel = mongoose.model('TripLoc');
+var rateLimiter = require('./rateLimiter.js')
 
 
 // Ringpop libraries
@@ -222,10 +225,20 @@ function updateTripInfo(payload)
 function createHttpServers(ringpop, port) {
     var http = express();
     var httpPort = port * 2; // HTTP will need its own port
+    
+
+    if (!rateLimiter())
+    {
+        console.log("Reach Request limit!");
+        res.send({retCode: 1, result: 0});
+        return;
+    }
 
     console.log("create http");
     // Define a single HTTP endpoint that 'handles' or forwards
     http.get('/countTrips/:lat1/:lng1/:lat2/:lng2', function onReq(req, res) {
+        // Rate Limiter
+        
         var lat1 = req.params.lat1;
         var lng1 = req.params.lng1;
         var lat2 = req.params.lat2;

@@ -9,5 +9,6 @@
           "mongodb://localhost:27017/test"]
     }
   },
-  "GeoHashLevel": 2
+  "GeoHashLevel": 2 ,
+  "RequestLimit": 100
 }
