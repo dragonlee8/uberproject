@@ -8,7 +8,7 @@ This project requires that Mongodb, RabbitMQ be installed.
 ![Alt text](/project.jpg?raw=true "Optional Title")
 This system utilize ringpop to distribute the request and rabbitMQ to stream update messages. The sharding would be depending on the Geohash key of the trip location. I use two character GeoHash as shardkey so that on theory there can be at maximum 36*36 nodes on the consistent hashing ring. Each node has a mongodb as persistent storage.
 
-The request to count the number of trips within the region would be served by RESTFUL interface hosted on node directly. If the search is across several geo cells, one request will be send to each cell and final result would be aggreated at the node which gets the request.
+The request to count the number of trips within the region would be served by RESTFUL interface hosted on node directly. If the search is across several geo cells, one request will be send to each cell and final result would be aggreated at the node which gets the request. A rate limiter was in place to prevent extremely high volume request send to server. 
 
 MongoDB provides good geospatial support with its 2dsphere index and geo query API. Also since the system is much more heavily weighted on write than read, MongoDB is very fast in adding the record. Also Mongodb provides good caching service, when the data set is smaller than the memory, the entire database is running in memory. So it's a very good fit.
 
