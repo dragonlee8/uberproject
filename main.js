@@ -259,7 +259,7 @@ function createHttpServers(ringpop, port) {
             let callback = function(err, ret, arg2, arg3) {
                 // aggregate the unique tripIDs here
 
-                let retTrips = ret.body.toString();
+                let retTrips = JSON.parse(ret.body.toString());
                 
                 for (let tripid in retTrips)
                 {

@@ -68,6 +68,7 @@ connection.addListener('ready', function () {
 
 	var create_trip = function() {
 		max_trip_id++;
+        console.log("createTrip " + max_trip_id);
 
 		var trip = {
 			tripId: max_trip_id,
@@ -90,9 +91,12 @@ connection.addListener('ready', function () {
 		create_trip(exchange);
 	}
 
+
 	function tick() {
 		// Move each car randomly
-        async.each(trips, function(trip) {
+        var cb = function ()
+        {}
+        async.each(trips, function(trip, cb) {
             if (!trip.active)
             {
                 return;
@@ -122,7 +126,9 @@ connection.addListener('ready', function () {
                     timestamp: (new Date).getTime()
                 });
 			}
+            cb();
         }, function(err) {
+            console.log("end");
             if( err ) {
                 console.log('A trip failed to process');
             } else {
