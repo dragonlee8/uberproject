@@ -5,6 +5,7 @@ A demo system for uber distributed system
 This project requires that Mongodb, RabbitMQ be installed.
 
 ## System overview:
+![Alt text](/project.jpg?raw=true "Optional Title")
 This system utilize ringpop to distribute the request and rabbitMQ to stream update messages. The sharding would be depending on the Geohash key of the trip location. I use two character GeoHash as shardkey so that on theory there can be at maximum 36*36 nodes on the consistent hashing ring. Each node has a mongodb as persistent storage.
 
 The request to count the number of trips within the region would be served by RESTFUL interface hosted on node directly. If the search is across several geo cells, one request will be send to each cell and final result would be aggreated at the node which gets the request.
