@@ -83,4 +83,4 @@ The average response time of the trip count request is around 100ms on the Debia
 # TODO:
 * Add different configuration for dev and prod environment. 
 * Use Google S2 to replace MongoDB to achieve better performance
-* Add 
+* I didn't have time to finish the Chef script. To add chef scrip to auto deployment and config number of nodes
